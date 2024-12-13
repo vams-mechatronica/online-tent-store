@@ -46,6 +46,9 @@ INSTALLED_APPS = [
     'supplier',
     'cart',
     'drf_yasg',
+    'orders',
+    'coupon',
+    'payments',
 ]
 
 MIDDLEWARE = [
@@ -154,4 +157,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 HASHIDS_SALT = (
     "jkqbdvaiacobaowr27834691230jnfbqoey92tribhwefq8w9r1@E23jr23r!3hrg81t43r1r"
 )
+
+# razorpay test mode
+RAZORPAY_API_KEY = "rzp_test_yNDilG23SClpGV"
+RAZORPAY_API_KEY_SECRET = "aP7pgMCFa11yKw19p8G8h63B"
 

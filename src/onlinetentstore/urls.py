@@ -25,9 +25,9 @@ from drf_yasg import openapi
 
 schema_view = get_schema_view(
    openapi.Info(
-      title="VAMS Central API",
+      title="Online Tent Booking",
       default_version='v1',
-      description="Online Shopping For Men, Women, and Kids Fashion & Lifestyle.",
+      description="Book Tents for Your Celebrations online",
       terms_of_service="https://www.vamscentral.com/about/terms-of-service",
    ),
    public=True,
@@ -48,4 +48,6 @@ urlpatterns = [
     path('account/',include('accounts.urls')),
     path('product/',include('products.urls')),
     path('wishlist/',include('cart.urls')),
+    path('order/',include('orders.urls')),
+    path('payment/',include('payments.urls')),
 ]
