@@ -9,10 +9,10 @@ class Payment(models.Model):
     advance_amount = models.DecimalField(_("Advance Amount"), max_digits=10, decimal_places=2, default=0.0)
     advance_payment_id = models.CharField(_("Advance Payment ID"), max_length=100, null=True, blank=True)
     advance_payment_transaction_id = models.CharField(_("Advance Payment Transaction ID"), max_length=100, null=True, blank=True)
+    advance_date = models.DateTimeField(_("Advance Payment Date"), null=True, blank=True)
     pending_amount = models.DecimalField(_("Pending Amount"), max_digits=10, decimal_places=2, default=0.0)
     pending_payment_id = models.CharField(_("Pending Payment ID"), max_length=100, null=True, blank=True)
     pending_payment_transaction_id = models.CharField(_("Pending Payment Transaction ID"), max_length=100, null=True, blank=True)
-    advance_date = models.DateTimeField(_("Advance Payment Date"), null=True, blank=True)
     pending_date = models.DateTimeField(_("Pending Payment Date"), null=True, blank=True)
 
     def __str__(self):

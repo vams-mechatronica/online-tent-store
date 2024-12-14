@@ -72,6 +72,9 @@ class UserAddresses(models.Model):
     address_type = models.CharField(
         _("Address type"), max_length=200, blank=True, null=True)
 
+    class Meta:
+        verbose_name = _("UserAddress")
+        verbose_name_plural = _("UserAddress")
 
     def __str__(self) -> str:
         return "user:{} city: {} pincode: {} phoneno. {}".format(self.user, self.city, self.pincode, self.addPhoneNumber)

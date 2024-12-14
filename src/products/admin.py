@@ -14,6 +14,24 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(ProductImage)
 class ProductImageAdmin(admin.ModelAdmin):
     pass
+
+@admin.register(GatheringSize)
+class GatheringSizeAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(PartyingForChoice)
+class PartyingForChoiceAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(UserRequirement)
+class UserRequirementAdmin(admin.ModelAdmin):
+    pass
+    
+
+    
+
+    
+
     
 
     

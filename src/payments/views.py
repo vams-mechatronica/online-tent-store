@@ -29,11 +29,11 @@ class CreatePaymentAPI(APIView):
             order = Order.objects.get(pk=order_id)
 
             # Determine the amount based on payment type
-            payment_type = request.query_params.get('payment_type', 'initial')
-            if payment_type not in ['initial', 'full']:
-                return Response({"error": "Invalid payment_type. Use 'initial' or 'full'."}, status=status.HTTP_400_BAD_REQUEST)
+            payment_type = request.query_params.get('payment_type', None)
+            if payment_type not in ['advance', 'full']:
+                return Response({"error": "Invalid payment_type. Use 'advance' or 'full'."}, status=status.HTTP_400_BAD_REQUEST)
 
-            amount = order.booking_amount if payment_type == 'initial' else order.total_amount
+            amount = order.booking_amount if payment_type == 'advance' else order.total_amount
 
             # Convert amount to paise (Razorpay accepts amounts in paise)
             amount_in_paise = int(amount * 100)
@@ -47,12 +47,14 @@ class CreatePaymentAPI(APIView):
 
             # Update the order with Razorpay order ID
             payment_details, _ = Payment.objects.get_or_create(order=order)
-            if payment_type == 'initial':
+            if payment_type == 'advance':
+                is_booking_amount = True
                 payment_details.advance_amount = amount
                 payment_details.advance_date = datetime.now()
                 payment_details.advance_payment_id = razorpay_order['id']
                 # payment_details.advance_payment_transaction_id = razorpay_order.get('transaction_id')
             elif payment_type == 'full':
+                is_booking_amount = False
                 payment_details.pending_amount = amount
                 payment_details.pending_date = datetime.now()
                 payment_details.pending_payment_id = razorpay_order['id']
@@ -62,10 +64,12 @@ class CreatePaymentAPI(APIView):
 
 
             return Response({
-                "order_id": razorpay_order['id'],
+                "order_id":order_id,
+                "razorpay_order_id": razorpay_order['id'],
                 "amount": amount,
                 "currency": "INR",
-                "payment_type": payment_type
+                "payment_type": payment_type,
+                "is_booking_payment":is_booking_amount
             }, status=status.HTTP_200_OK)
 
         except Order.DoesNotExist:

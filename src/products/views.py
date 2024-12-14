@@ -16,7 +16,21 @@ class ProductAPI(generics.ListAPIView):
     serializer_class = ProductSerialzer
     pagination_class = PageNumberPagination
 
+class ProductPostAPI(generics.CreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerialzer
+    pagination_class = PageNumberPagination
+    authentication_classes = (BasicAuthentication,TokenAuthentication)
+    permission_classes = (IsAuthenticated,)
+
 class ProductImageAPI(generics.ListAPIView):
+    queryset = ProductImage.objects.all()
+    serializer_class = ProductImageSerializer
+    pagination_class = PageNumberPagination
+
+class ProductImagePostAPI(generics.CreateAPIView):
+    authentication_classes = (BasicAuthentication,TokenAuthentication)
+    permission_classes = (IsAuthenticated,)
     queryset = ProductImage.objects.all()
     serializer_class = ProductImageSerializer
     pagination_class = PageNumberPagination
@@ -30,6 +44,24 @@ class ProductCategoryAPI(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductCategorySerializer
     pagination_class = PageNumberPagination
+
+class GetheringSizeAPI(generics.ListAPIView):
+    queryset = GatheringSize.objects.all()
+    serializer_class = GatheringSizeSerializer
+    pagination_class = PageNumberPagination
+
+class PartyingForChoiceAPI(generics.ListAPIView):
+    queryset = PartyingForChoice.objects.all()
+    serializer_class = PartyingForChoiceSerializer
+    pagination_class = PageNumberPagination
+
+class UserRequirementAPI(generics.ListCreateAPIView):
+    serializer_class = UserRequirementSerializer
+    pagination_class = PageNumberPagination
+    authentication_classes = (BasicAuthentication,TokenAuthentication)
+    permission_classes = (IsAuthenticated,)
+    def get_queryset(self):
+        return UserRequirement.objects.get(user=self.request.user)
 
 class ProductImagesAPIView(APIView):
     def get(self, request, pk):

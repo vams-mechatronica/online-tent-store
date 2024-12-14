@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.db import transaction
+from cart.models import Wishlist
 from .models import Order
 from .serializers import OrderSerializer
 from coupon.models import Coupon
@@ -15,15 +16,17 @@ from rest_framework.authentication import TokenAuthentication, BasicAuthenticati
 
 
 class CreateOrderAPIView(APIView):
+    authentication_classes = (BasicAuthentication,TokenAuthentication)
+    permission_classes = (IsAuthenticated,)
     def post(self, request):
-        user = request.user  # Assuming authentication is set up
+        user = request.user
         coupon_code = request.data.get("coupon_code")
-        payment_data = request.data.get("payment_data")  # Optional for payment handling
+        # payment_data = request.data.get("payment_data")
 
         try:
-            # Validate payment data
-            if payment_data and not {"amount", "payment_id", "transaction_id"} <= payment_data.keys():
-                return Response({"error": "Invalid payment data."}, status=status.HTTP_400_BAD_REQUEST)
+            # # Validate payment data
+            # if payment_data and not {"amount", "payment_id", "transaction_id"} <= payment_data.keys():
+            #     return Response({"error": "Invalid payment data."}, status=status.HTTP_400_BAD_REQUEST)
 
             # Create order and optionally handle payment
             with transaction.atomic():
@@ -33,7 +36,7 @@ class CreateOrderAPIView(APIView):
                     return Response({"error": "No items in the wishlist to create an order."}, status=status.HTTP_400_BAD_REQUEST)
 
                 # Calculate total amount
-                total_amount = sum(item.item.price * item.quantity for item in wishlist_items if item.item)
+                total_amount = sum(item.item.unit_base_price * item.quantity for item in wishlist_items if item.item)
 
                 # Apply coupon if provided
                 coupon = None
@@ -53,7 +56,7 @@ class CreateOrderAPIView(APIView):
                         {
                             "item_id": item.item.id,
                             "name": item.item.name,
-                            "price": item.item.price,
+                            "price": item.item.unit_base_price,
                             "quantity": item.quantity,
                         }
                         for item in wishlist_items
@@ -64,18 +67,7 @@ class CreateOrderAPIView(APIView):
                 )
 
                 # Mark wishlist items as ordered
-                wishlist_items.update(ordered=True)
-
-                # If payment is provided, link it to the order
-                if payment_data:
-                    Payment.objects.create(
-                        user=user,
-                        order=order,
-                        amount=payment_data["amount"],
-                        payment_id=payment_data["payment_id"],
-                        transaction_id=payment_data["transaction_id"],
-                        status="SUCCESS",  # Assuming payment is successful
-                    )
+                # wishlist_items.update(ordered=True)
 
             return Response({"message": "Order created successfully.", "order_id": order.id}, status=status.HTTP_201_CREATED)
 

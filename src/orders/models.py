@@ -9,11 +9,11 @@ class Order(models.Model):
     total_amount = models.DecimalField(_("Total Amount"), max_digits=10, decimal_places=2)
     coupon = models.ForeignKey("coupon.Coupon", verbose_name=_("Coupon"), null=True, blank=True, on_delete=models.SET_NULL)
     final_amount = models.DecimalField(_("Final Amount After Discount"), max_digits=10, decimal_places=2, default=0.0)
-    booking_amount = models.DecimalField(_("Booking Amount"), max_digits=10, decimal_places=2, default=0.0)
+    booking_amount = models.DecimalField(_("Booking Amount"), max_digits=10, decimal_places=2, default=100.0)
     is_partial_payment_paid = models.BooleanField(_("Is Booking Payment Completed"), default=False)
     is_full_payment_paid = models.BooleanField(_("Is Full Payment Completed"), default=False)
-    start_datetime = models.DateTimeField(_("Start Date and Time"))
-    end_datetime = models.DateTimeField(_("End Date and Time"))
+    start_datetime = models.DateTimeField(_("Start Date and Time"), null=True, blank=True)
+    end_datetime = models.DateTimeField(_("End Date and Time"), null=True, blank=True)
     hours = models.DecimalField(_("Total Hours"), max_digits=10, decimal_places=2, default=0.0)
     created_at = models.DateTimeField(_("Order Created At"), auto_now_add=True)
     modified_at = models.DateTimeField(_("Order Modified At"), auto_now=True)
@@ -32,7 +32,7 @@ class Order(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Order #{self.pk} by {self.user.username}"
+        return f"Order #{self.pk} by {self.user.mobileno}"
 
     def apply_coupon(self):
         if self.coupon and self.coupon.is_active:
