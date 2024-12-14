@@ -52,6 +52,7 @@ urlpatterns = [
     path('wishlist/',include('cart.urls')),
     path('order/',include('orders.urls')),
     path('payment/',include('payments.urls')),
+    path('supplier/',include('supplier.urls')),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
