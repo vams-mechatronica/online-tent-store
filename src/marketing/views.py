@@ -82,9 +82,10 @@ def whatsapp_webhook(request):
 def add_delivery_status(request):
     if request.method == 'POST':
         try:
-            results = request.body.get('results')
-            for dat in results:
-                data = json.loads(dat)
+            body = json.loads(request.body)
+            results = body.get('results')
+            for data in results:
+                # data = json.loads(dat)
                 delivery_status = WhatsappDeliveryStatus(
                     message_id=data['messageId'],
                     to=data['to'],
