@@ -128,6 +128,7 @@ class WhatsAppOutboundMessage(models.Model):
 
 
 class WhatsappDeliveryStatus(models.Model):
+    bulk_id = models.CharField(_("Bulk_id"), max_length=550,null=True,blank=True)
     message_id = models.CharField(max_length=255, unique=True)
     to = models.CharField(max_length=20)
     sent_at = models.DateTimeField()
@@ -137,6 +138,12 @@ class WhatsappDeliveryStatus(models.Model):
     status_group_name = models.CharField(max_length=50)
     status_name = models.CharField(max_length=50)
     status_description = models.CharField(max_length=255)
+    error_id = models.IntegerField()
+    error_group_id = models.IntegerField()
+    error_group_name = models.CharField(max_length=50)
+    error_name = models.CharField(max_length=50)
+    error_description = models.CharField(max_length=255)
+    error_permanent = models.BooleanField()
     price_per_message = models.DecimalField(max_digits=10, decimal_places=2)
     currency = models.CharField(max_length=10)
     class Meta:

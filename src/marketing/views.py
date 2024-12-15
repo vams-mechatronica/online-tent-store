@@ -82,21 +82,29 @@ def whatsapp_webhook(request):
 def add_delivery_status(request):
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)
-            delivery_status = WhatsappDeliveryStatus(
-                message_id=data['messageId'],
-                to=data['to'],
-                sent_at=parse_datetime(data['sentAt']),
-                done_at=parse_datetime(data['doneAt']),
-                status_id=data['status']['id'],
-                status_group_id=data['status']['groupId'],
-                status_group_name=data['status']['groupName'],
-                status_name=data['status']['name'],
-                status_description=data['status']['description'],
-                price_per_message=data['price']['pricePerMessage'],
-                currency=data['price']['currency']
-            )
-            delivery_status.save()
+            results = request.body.get('results')
+            for dat in results:
+                data = json.loads(dat)
+                delivery_status = WhatsappDeliveryStatus(
+                    message_id=data['messageId'],
+                    to=data['to'],
+                    sent_at=parse_datetime(data['sentAt']),
+                    done_at=parse_datetime(data['doneAt']),
+                    status_id=data['status']['id'],
+                    status_group_id=data['status']['groupId'],
+                    status_group_name=data['status']['groupName'],
+                    status_name=data['status']['name'],
+                    status_description=data['status']['description'],
+                    error_id=data['error']['id'],
+                    error_group_id=data['error']['groupId'],
+                    error_group_name=data['error']['groupName'],
+                    error_name=data['error']['name'],
+                    error_description=data['error']['description'],
+                    error_permanent=bool(data['error']['permanent']),
+                    price_per_message=data['price']['pricePerMessage'],
+                    currency=data['price']['currency']
+                )
+                delivery_status.save()
             return JsonResponse({"message": "Delivery status added successfully!"}, status=201)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
