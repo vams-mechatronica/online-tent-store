@@ -1,7 +1,8 @@
 import requests
 from django.conf import settings
 from django.http import JsonResponse
-from .models import WhatsAppOutboundMessage
+from django.utils.dateparse import parse_datetime
+from .models import *
 
 def send_whatsapp_message(recipient_number, message_content, message_type='text'):
     # Infobip API endpoint and credentials
@@ -75,3 +76,55 @@ def whatsapp_webhook(request):
         except Exception as e:
             return JsonResponse({"status": "error", "message": str(e)}, status=400)
     return JsonResponse({"status": "error", "message": "Invalid request method"}, status=405)
+
+
+@csrf_exempt
+def add_delivery_status(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            delivery_status = WhatsappDeliveryStatus(
+                message_id=data['messageId'],
+                to=data['to'],
+                sent_at=parse_datetime(data['sentAt']),
+                done_at=parse_datetime(data['doneAt']),
+                status_id=data['status']['id'],
+                status_group_id=data['status']['groupId'],
+                status_group_name=data['status']['groupName'],
+                status_name=data['status']['name'],
+                status_description=data['status']['description'],
+                price_per_message=data['price']['pricePerMessage'],
+                currency=data['price']['currency']
+            )
+            delivery_status.save()
+            return JsonResponse({"message": "Delivery status added successfully!"}, status=201)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+    return JsonResponse({"error": "Invalid method"}, status=405)
+
+@csrf_exempt
+def get_delivery_status(request):
+    if request.method == 'GET':
+        statuses = list(WhatsappDeliveryStatus.objects.values())
+        return JsonResponse(statuses, safe=False, status=200)
+    return JsonResponse({"error": "Invalid method"}, status=405)
+
+@csrf_exempt
+def add_seen_report(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            seen_report = WhatsappSeenReport(
+                message_id=data['messageId'],
+                sender=data['from'],
+                recipient=data['to'],
+                sent_at=parse_datetime(data['sentAt']),
+                seen_at=parse_datetime(data['seenAt']),
+                application_id=data.get('applicationId'),
+                entity_id=data.get('entityId')
+            )
+            seen_report.save()
+            return JsonResponse({"message": "Seen report added successfully!"}, status=201)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+    return JsonResponse({"error": "Invalid method"}, status=405)

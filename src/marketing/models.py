@@ -127,3 +127,33 @@ class WhatsAppOutboundMessage(models.Model):
         ordering = ['-created_at']
 
 
+class WhatsappDeliveryStatus(models.Model):
+    message_id = models.CharField(max_length=255, unique=True)
+    to = models.CharField(max_length=20)
+    sent_at = models.DateTimeField()
+    done_at = models.DateTimeField()
+    status_id = models.IntegerField()
+    status_group_id = models.IntegerField()
+    status_group_name = models.CharField(max_length=50)
+    status_name = models.CharField(max_length=50)
+    status_description = models.CharField(max_length=255)
+    price_per_message = models.DecimalField(max_digits=10, decimal_places=2)
+    currency = models.CharField(max_length=10)
+    class Meta:
+        verbose_name = "WhatsApp Delivery Reports"
+        verbose_name_plural = "WhatsApp Delivery Reports"
+        # ordering = ['-created_at']
+
+class WhatsappSeenReport(models.Model):
+    message_id = models.CharField(max_length=255, unique=True)
+    sender = models.CharField(max_length=20)
+    recipient = models.CharField(max_length=20)
+    sent_at = models.DateTimeField()
+    seen_at = models.DateTimeField()
+    application_id = models.CharField(max_length=255, null=True, blank=True)
+    entity_id = models.CharField(max_length=255, null=True, blank=True)
+    class Meta:
+        verbose_name = "WhatsApp Seen Reports"
+        verbose_name_plural = "WhatsApp Seen Reports"
+        # ordering = ['-created_at']
+
