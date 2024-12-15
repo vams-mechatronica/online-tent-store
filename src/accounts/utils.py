@@ -40,33 +40,49 @@ class OTPManager:
                 device_otp.status = False
                 device_otp.save()
         except Exception as e:
-            print(e)
-            pass
+            logger.exception(e)
 
         country_code = country_code.replace('+', '').strip()
 
         country, _ = Country.objects.get_or_create(
             country_code=int(country_code))
-        # if not fake_otp:
-        #     response = c.send_text_message(
-        #                 {
-        #                 "from": str(settings.SENDER_PHONE_NUMBER),
-        #                 "to": str(country_code+phone_number),
-        #                 "messageId": str(uuid.uuid1),
-        #                 "content": {
-        #                     "text": f"Hi, Your VAMSCentral One-Time Password is {otp}. Please don't share this with anyone else. Regards, VAMSCentral"
-        #                 },
-                        
-        #                 }
-        #     )
-        #     if response.status_code == 200:
-        #         print(response )
-        #         print('sent')
-        #     msgtxt = str(otp) + ' is the OTP for Glovo Food Delivery App.'
-        #     msgtxt = msgtxt.replace(" ", "%20")
-            # url = "https://9rd3vd.api.infobip.com/sms/1/text/query?username=MudStudio&password=Prune@2022&from=IPrune&to=91" + \
-            #     phone_number+"&indiaDltContentTemplateId=1107161513294569922&indiaDltPrincipalEntityId=1101439040000040339&text="+msgtxt
-            # x = requests.get(url)
+        if not fake_otp:
+            payload = {
+                "messages": [
+                    {
+                    "from": "12248140388",
+                    "to": country_code+phone_number,
+                    "messageId": str(uuid.uuid1),
+                    "content": {
+                        "templateName": "otp_auth_wa",
+                        "templateData": {
+                        "body": {
+                            "placeholders": [
+                            str(otp)
+                            ]
+                        },
+                        "buttons": [
+                            {
+                            "type": "URL",
+                            "parameter": str(otp)
+                            }
+                        ]
+                        },
+                        "language": "en_GB"
+                    },
+                    "callbackData": "Callback data",
+                    "notifyUrl": "https://ashekhar.pythonanywhere.com/marketing/whatsapp/delivery-status/add"
+                    }
+                ]
+            }
+            headers = {
+                'Authorization': f"App {settings.INFOBIP_API_KEY}",
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+            response = requests.post(settings.INFOBIP_SEND_TEMPLATE_MESSAGE_API_URL, json=payload, headers=headers)
+            if response.status_code == 200:
+                logger.info('Message Sent Successfully')
         DeviceOtp.objects.create(
             number=phone_number, otp=otp, status=True, country=country)
         return True

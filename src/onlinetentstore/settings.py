@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-ss+^@j^fl=5e8d4rze4zj@+2r08p9^l$94!p2!39%#e9n4xtr=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["ashekhar.pythonanywhere.com"]
+ALLOWED_HOSTS = ["ashekhar.pythonanywhere.com","*"]
 
 
 # Application definition
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'accounts',
     'allauth',
+    'allauth.account',
     'products',
     'supplier',
     'cart',
@@ -60,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = 'onlinetentstore.urls'
@@ -164,4 +166,5 @@ RAZORPAY_API_KEY = "rzp_test_yNDilG23SClpGV"
 RAZORPAY_API_KEY_SECRET = "aP7pgMCFa11yKw19p8G8h63B"
 
 
-INFOBIP_API_KEY = ""
+INFOBIP_API_KEY = "1df6da9de0f3146a6974d2341f9009e3-6c2d2d67-30ea-4449-bfb2-fd7cab2efb4f"
+INFOBIP_SEND_TEMPLATE_MESSAGE_API_URL = "https://2vmy9l.api.infobip.com/whatsapp/1/message/template"
