@@ -28,13 +28,18 @@ TAGS = (('Home', 'Home'), ('Office',
                                      'Office'), ('Other', 'Other'),)
 
 class CustomUser(AbstractUser):
+    ROLE_CHOICES = (
+        ('customer', 'Customer'),
+        ('supplier', 'Supplier'),
+    )
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES,default='customer')
     first_name = models.CharField(default="Central", max_length=100)
     last_name = models.CharField(default="User", max_length=100)
     email = models.EmailField(null=True,unique=True)
     mobileno = models.CharField(verbose_name="Mobile Number",
                               null=False, max_length=10, default="", unique=True)
     username = models.CharField(null=True, max_length=50, unique=True)
-    is_seller = models.BooleanField(default=False)
+    is_supplier = models.BooleanField(default=False)
     is_mobileverified = models.BooleanField(default=False)
     created_at = models.DateTimeField(_("User Created Date"), auto_now_add=True)
     modified_at = models.DateTimeField(_("User Modified Date"), auto_now=True)

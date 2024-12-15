@@ -20,6 +20,8 @@ from random import randint as rand
 #     "api_key": settings.IB_API_KEY
 # })
 user_model = get_user_model()
+import logging
+logger = logging.getLogger(__name__)
 
 
 class OTPManager:
@@ -71,20 +73,47 @@ class OTPManager:
 
     @staticmethod
     def verify_otp(otp, country_code, phone_number,web):
-        country_code = country_code.replace('+', '')
-        country = Country.objects.get(country_code=country_code)
-        device_otp = DeviceOtp.objects.get(
-            number=phone_number, status=True, country=country)
-        if int(otp) != device_otp.otp:
-            return JsonResponse({'Error': "OTP Didn't matched!"}, status=status.HTTP_401_UNAUTHORIZED)
-        user, created = user_model.objects.get_or_create(mobileno=phone_number)
-        token, created = Token.objects.get_or_create(user=user)
-        if web == False:
-            device_otp.status = False
-            device_otp.save()
-            return JsonResponse({'user': UserSerializer(user).data, 'token': token.key},status=status.HTTP_201_CREATED)
-        else:
-            device_otp.status = False
-            device_otp.save()
-            return user
+        try:
+            country_code = country_code.replace('+', '')
+            country = Country.objects.get(country_code=country_code)
+            device_otp = DeviceOtp.objects.get(
+                number=phone_number, status=True, country=country)
+            if int(otp) != device_otp.otp:
+                return JsonResponse({'Error': "OTP Didn't matched!"}, status=status.HTTP_401_UNAUTHORIZED)
+            user, created = user_model.objects.get_or_create(mobileno=phone_number,is_mobileverified=True)
+            token, created = Token.objects.get_or_create(user=user)
+            if web == False:
+                device_otp.status = False
+                device_otp.save()
+                return JsonResponse({'user': UserSerializer(user).data, 'token': token.key},status=status.HTTP_201_CREATED)
+            else:
+                device_otp.status = False
+                device_otp.save()
+                return user
+        except Exception as err:
+            logger.error(f'Error Occurred: {str(err)}')
+    
+    @staticmethod
+    def verify_otp_for_seller(otp, country_code, phone_number,web):
+        try:
+            country_code = country_code.replace('+', '')
+            country = Country.objects.get(country_code=country_code)
+            device_otp = DeviceOtp.objects.get(
+                number=phone_number, status=True, country=country)
+            if int(otp) != device_otp.otp:
+                return JsonResponse({'Error': "OTP Didn't matched!"}, status=status.HTTP_401_UNAUTHORIZED)
+            
+            user, created = user_model.objects.get_or_create(mobileno=phone_number,role='supplier',is_supplier=True,is_mobileverified=True)
+            token, created = Token.objects.get_or_create(user=user)
+            
+            if web == False:
+                device_otp.status = False
+                device_otp.save()
+                return JsonResponse({'user': UserSerializer(user).data, 'token': token.key},status=status.HTTP_201_CREATED)
+            else:
+                device_otp.status = False
+                device_otp.save()
+                return user
+        except Exception as err:
+            logger.error(f'Error Occurred: {str(err)}')
     
