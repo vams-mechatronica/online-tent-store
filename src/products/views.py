@@ -55,6 +55,11 @@ class PartyingForChoiceAPI(generics.ListAPIView):
     serializer_class = PartyingForChoiceSerializer
     pagination_class = PageNumberPagination
 
+class PlaceTypeAPI(generics.ListAPIView):
+    queryset = PlaceChoiceForParty.objects.all()
+    serializer_class = PlaceChoiceSerializer
+    pagination_class = PageNumberPagination
+
 class UserRequirementAPI(generics.ListCreateAPIView):
     serializer_class = UserRequirementSerializer
     pagination_class = PageNumberPagination

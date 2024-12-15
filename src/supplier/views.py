@@ -18,10 +18,55 @@ class ServiceProviderAPI(generics.ListCreateAPIView):
     authentication_classes = (BasicAuthentication,TokenAuthentication)
     permission_classes = (IsAuthenticated,)
 
-class SuppliersOrderAPI(generics.ListAPIView):
-    serializer_class = SupplierOrderSerializer
-    permission_classes = (IsAuthenticated,)
-    authentication_classes = (BasicAuthentication,TokenAuthentication)
+
+class SupplierOrderListAPIView(generics.ListAPIView):
+    serializer_class = SupplierOrderSerializer  # Create a serializer for SupplierOrder
+    queryset = SupplierOrder.objects.all()
+
     def get_queryset(self):
-        return SupplierOrder.objects.all()
+        queryset = super().get_queryset()
+        supplier_id = self.request.query_params.get("supplier_id")
+        status = self.request.query_params.get("status")
+
+        if supplier_id:
+            queryset = queryset.filter(supplier_id=supplier_id)
+
+        if status:
+            queryset = queryset.filter(status=status)
+
+        return queryset
+
+class SupplierOrderUpdateAPIView(generics.UpdateAPIView):
+    queryset = SupplierOrder.objects.all()
+    serializer_class = SupplierOrderStatusSerializer  # Create a serializer for updating the status
+    lookup_field = "pk"
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
     
+# Views for SupplierTransaction
+
+class SupplierTransactionCreateAPIView(generics.CreateAPIView):
+    queryset = SupplierTransaction.objects.all()
+    serializer_class = SupplierTransactionSerializer
+
+class SupplierTransactionListAPIView(generics.ListAPIView):
+    queryset = SupplierTransaction.objects.all()
+    serializer_class = SupplierTransactionSerializer
+
+class SupplierTransactionRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
+    queryset = SupplierTransaction.objects.all()
+    serializer_class = SupplierTransactionSerializer
+    lookup_field = 'pk'
+
+# Views for SupplierAccountDetails
+
+class SupplierAccountDetailsCreateAPIView(generics.CreateAPIView):
+    queryset = SupplierAccountDetails.objects.all()
+    serializer_class = SupplierAccountDetailsSerializer
+
+class SupplierAccountDetailsRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
+    queryset = SupplierAccountDetails.objects.all()
+    serializer_class = SupplierAccountDetailsSerializer
+    lookup_field = 'supplier__id'  # Use supplier ID to retrieve account details

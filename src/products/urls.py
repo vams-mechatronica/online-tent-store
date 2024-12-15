@@ -10,5 +10,6 @@ urlpatterns = [
     path('product-images/<int:pk>',ProductImagesAPIView.as_view()),
     path('gathering-size',GetheringSizeAPI.as_view()),
     path('party-choices',PartyingForChoiceAPI.as_view()),
-    path('user-requirements',UserRequirementAPI.as_view()),
+    path('get-estimate',UserRequirementAPI.as_view()),
+    path('place-type',PlaceTypeAPI.as_view()),
 ]

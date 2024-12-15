@@ -15,6 +15,7 @@ from .models import *
 from datetime import datetime,timezone
 
 from orders.models import Order
+from supplier.models import ServiceProvider,SupplierOrder
 
 
 # Initialize Razorpay client
@@ -113,24 +114,66 @@ class VerifyPaymentAPI(APIView):
 
 class PaymentSuccessUpdateAPI(APIView):
     def get(self, request):
-        # def razorpay_success_redirect(request):
         razorpay_order_id = request.GET.get("razorpay_order_id")
         razorpay_payment_id = request.GET.get("razorpay_payment_id")
-        order_id = request.GET.get('order_id')
-        is_partial = request.GET.get('is_booking_amount')
-        # selected_billing_address = BillingAddress.objects.get(user=request.user, is_default=True)
+        order_id = request.GET.get("order_id")
+        is_partial = request.GET.get("is_booking_amount")
+
         if request.user and order_id:
-            order = Order.objects.get(user=request.user, payment_status=False,pk=order_id)
-            payment_detail = Payment.objects.get(order=order)
-            if is_partial:
-                payment_detail.advance_payment_transaction_id = razorpay_payment_id
-                order.is_partial_payment_paid = True
-            else:
-                payment_detail.pending_payment_transaction_id = razorpay_payment_id
-                order.is_full_payment_paid = True
-            payment_detail.save()
-            order.save()
-        return Response({'message':
-                         'Payment Successful'},status=status.HTTP_200_OK)
+            try:
+                order = Order.objects.get(user=request.user, payment_status=False, pk=order_id)
+                payment_detail = Payment.objects.get(order=order)
+
+                # Update payment details
+                if is_partial:
+                    payment_detail.advance_payment_transaction_id = razorpay_payment_id
+                    order.is_partial_payment_paid = True
+                else:
+                    payment_detail.pending_payment_transaction_id = razorpay_payment_id
+                    order.is_full_payment_paid = True
+
+                payment_detail.save()
+                order.save()
+
+                # Create SupplierOrder objects
+                for item in order.items:  # Assuming `items` is a list of product dictionaries
+                    supplier_id = item.get("supplier_id")  # Ensure `supplier_id` is passed in each product
+                    if not supplier_id:
+                        continue
+
+                    supplier = ServiceProvider.objects.get(pk=supplier_id)
+
+                    SupplierOrder.objects.create(
+                        order=order,
+                        supplier=supplier,
+                        items=[item],  # Add the item details for this supplier
+                        order_date=timezone.now(),
+                        event_start_date=order.start_datetime,
+                        event_end_date=order.end_datetime,
+                        booking_detail={
+                            "customer_name": request.user.get_full_name(),
+                            "customer_contact": request.user.mobileno,
+                            "event_venue": "Some venue",  # Replace with actual venue details if available
+                            "start_date": order.start_datetime,
+                            "end_date": order.end_datetime,
+                            "total_amount": order.total_amount,
+                            "supplier_share": item.get("supplier_share", 0),
+                            "payment_status": "Paid" if order.is_full_payment_paid else "Partial",
+                        },
+                        total_quantity=item.get("quantity", 0),
+                        total_cost=item.get("supplier_cost", 0.0),
+                        status="PENDING",
+                    )
+
+                return Response({"message": "Payment Successful and Supplier Orders Created"}, status=status.HTTP_200_OK)
+
+            except Order.DoesNotExist:
+                return Response({"error": "Order not found"}, status=status.HTTP_404_NOT_FOUND)
+            except ServiceProvider.DoesNotExist:
+                return Response({"error": "Supplier not found"}, status=status.HTTP_404_NOT_FOUND)
+            except Exception as e:
+                return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"error": "Invalid request"}, status=status.HTTP_400_BAD_REQUEST)
 
 

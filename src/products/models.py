@@ -86,11 +86,28 @@ class PartyingForChoice(models.Model):
     def get_absolute_url(self):
         return reverse("PartyingForChoice_detail", kwargs={"pk": self.pk})
 
+class PlaceChoiceForParty(models.Model):
+    name = models.CharField(_("Place Type"), max_length=50)
+    created_at = models.DateTimeField(_("Created At"), auto_now=False, auto_now_add=True)
+    modified_at = models.DateTimeField(_("Modified At"), auto_now=True, auto_now_add=False)
+
+    class Meta:
+        verbose_name = _("PlaceChoiceForParty")
+        verbose_name_plural = _("PlaceChoiceForPartys")
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("PlaceChoiceForParty_detail", kwargs={"pk": self.pk})
+
+
 
 class UserRequirement(models.Model):
     user = models.ForeignKey("accounts.CustomUSer", verbose_name=_("User"), on_delete=models.CASCADE)
     partying_for = models.ForeignKey("PartyingForChoice", verbose_name=_("Partying For"), on_delete=models.CASCADE,null=True,blank=True)
     gathering_of = models.ForeignKey("GatheringSize", verbose_name=_("Gathering For"), on_delete=models.CASCADE,null=True,blank=True)
+    place_type = models.ForeignKey("PlaceChoiceForParty", verbose_name=_("Place Type"), on_delete=models.CASCADE,null=True,blank=True)
     plot_area = models.CharField(_("Plot Area (in feets)"), max_length=500,null=True,blank=True)
     description = models.TextField(_("Description"))
     created_at = models.DateTimeField(_("Created At"), auto_now=False, auto_now_add=True)

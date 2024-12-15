@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product, ProductImage, Category,GatheringSize,PartyingForChoice,UserRequirement
+from .models import Product, ProductImage, Category,GatheringSize,PartyingForChoice,UserRequirement,PlaceChoiceForParty
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -41,4 +41,9 @@ class PartyingForChoiceSerializer(serializers.ModelSerializer):
 class UserRequirementSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserRequirement
+        fields = '__all__'
+
+class PlaceChoiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlaceChoiceForParty
         fields = '__all__'
