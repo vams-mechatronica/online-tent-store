@@ -330,6 +330,28 @@ class VerifyOTPForSupplier(APIView):
         except Exception as e:
             return Response({"Error": "Invalid Data","message":f"{e}"}, status=status.HTTP_200_OK)
 
+class VerifyOTPForBDA(APIView):
+    permission_classes = (AllowAny,)
+
+    def post(self, request, *args, **kwargs):
+        try:
+            # Device.objects.get(auth_token=request.data.get('auth_token'))
+            phone_number = request.data.get("mobile")
+            country_code = request.data.get("country_code")
+            web = bool(request.data.get("web"))
+            otp = request.data.get("otp")
+
+            if not web:
+                return OTPManager.verify_otp_for_bda_or_bde(otp, country_code, phone_number, web)
+
+            else:
+                user_r = OTPManager.verify_otp_for_bda_or_bde(otp, country_code, phone_number, web)
+                auth.login(request, user_r)
+                return Response({"status": "OK"}, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({"Error": "Invalid Data","message":f"{e}"}, status=status.HTTP_200_OK)
+
 
 class CustomerRetrieveUpdateView(generics.RetrieveUpdateAPIView):
     permission_classes = (AllowAny,)

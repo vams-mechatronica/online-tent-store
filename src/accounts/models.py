@@ -31,6 +31,8 @@ class CustomUser(AbstractUser):
     ROLE_CHOICES = (
         ('customer', 'Customer'),
         ('supplier', 'Supplier'),
+        ('admin', 'Admin'),
+        ('bde', 'Business Development Executives (BDEs)'),
     )
     role = models.CharField(max_length=10, choices=ROLE_CHOICES,default='customer')
     first_name = models.CharField(default="Central", max_length=100)

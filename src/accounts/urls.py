@@ -11,6 +11,7 @@ urlpatterns = (
         path("register/get_otp/", views.getOTP.as_view(), name="get_otp"),
         path("register/verify/", views.VerifyOTP.as_view(), name="verify_otp"),
         path("register/supplier/verify-otp/", views.VerifyOTPForSupplier.as_view(), name="verify_otp_supplier"),
+        path("register/bda/verify-otp/", views.VerifyOTPForBDA.as_view(), name="verify_otp_bda"),
         
         # # login & signup using mobileno and password
         # path("register/", views.register, name="register"),
