@@ -53,6 +53,7 @@ urlpatterns = [
     path('order/',include('orders.urls')),
     path('payment/',include('payments.urls')),
     path('supplier/',include('supplier.urls')),
+    path('marketing/',include('marketing.urls')),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'orders',
     'coupon',
     'payments',
+    'marketing',
 ]
 
 MIDDLEWARE = [
@@ -162,3 +163,5 @@ HASHIDS_SALT = (
 RAZORPAY_API_KEY = "rzp_test_yNDilG23SClpGV"
 RAZORPAY_API_KEY_SECRET = "aP7pgMCFa11yKw19p8G8h63B"
 
+
+INFOBIP_API_KEY = ""
