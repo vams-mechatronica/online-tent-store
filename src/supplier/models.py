@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
+# from service.models import ServicableAddress
 
 
 class ServiceProvider(models.Model):
@@ -10,6 +11,7 @@ class ServiceProvider(models.Model):
     contact_person_name = models.CharField(_("Contact Person Name"), max_length=500, null=True, blank=True)
     contact_number = models.CharField(_("Contact number"), max_length=500,null=True, blank=True)
     email = models.EmailField(_("Email Id"), max_length=254,null=True,blank=True)
+    serviceable_address = models.ManyToManyField("service.ServicableAddress", verbose_name=_("Serviceable Pincode/Address"))
     
     class Meta:
         verbose_name = _("ServiceProvider")
