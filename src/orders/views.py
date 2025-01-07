@@ -92,6 +92,6 @@ class RetrieveOrderAPI(generics.RetrieveAPIView):
 
     def get_queryset(self):
         # Ensure only the authenticated user's orders can be accessed
-        return Order.objects.filter(user=self.request.user)
+        return Order.objects.filter(user=self.request.user.id)
 
 
