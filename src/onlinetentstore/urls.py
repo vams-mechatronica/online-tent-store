@@ -27,10 +27,10 @@ from django.conf.urls.static import static
 
 schema_view = get_schema_view(
    openapi.Info(
-      title="Online Tent Booking",
+      title="Online APIs",
       default_version='v1',
-      description="Book Tents for Your Celebrations online",
-      terms_of_service="https://www.vamscentral.com/about/terms-of-service",
+      description="API service for multiple applications",
+      terms_of_service="https://www.vamsbookstore.in/terms-of-service/",
    ),
    public=True,
    permission_classes=(permissions.AllowAny,),
