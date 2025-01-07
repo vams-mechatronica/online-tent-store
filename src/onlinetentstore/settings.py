@@ -102,7 +102,7 @@ DATABASES = {
             'ENGINE': 'django.db.backends.mysql',  
             'NAME': 'ashekhar$vams-ots',         
             'USER': 'ashekhar',          
-            'PASSWORD': '1@V@msots',  
+            'PASSWORD': '1@V@MSots1#',  
             'HOST': 'ashekhar.mysql.pythonanywhere-services.com',                   
             'PORT': '3306',                       
         }
