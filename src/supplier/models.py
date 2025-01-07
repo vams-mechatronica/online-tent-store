@@ -35,7 +35,7 @@ class SupplierOrder(models.Model):
         "ServiceProvider",
         verbose_name=_("Supplier"),
         on_delete=models.CASCADE,
-        related_name="supplier_orders",
+        related_name="supplier_id",
     )
     items = models.JSONField(
         _("Items Ordered"),
