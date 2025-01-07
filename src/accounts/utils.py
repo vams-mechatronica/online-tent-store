@@ -99,7 +99,11 @@ class OTPManager:
                 return Response({'Error':"OTP Didn't matched!"},status=status.HTTP_401_UNAUTHORIZED)
             if int(otp) != device_otp.otp:
                 return JsonResponse({'Error': "OTP Didn't matched!"}, status=status.HTTP_401_UNAUTHORIZED)
-            user, created = user_model.objects.get_or_create(mobileno=phone_number,is_mobileverified=True)
+            user, _created = user_model.objects.get_or_create(mobileno=phone_number)
+            if _created:
+                user.is_mobileverified=True
+                user.save()
+
             token, created = Token.objects.get_or_create(user=user)
             if web == False:
                 device_otp.status = False
@@ -125,7 +129,13 @@ class OTPManager:
             if int(otp) != device_otp.otp:
                 return JsonResponse({'Error': "OTP Didn't matched!"}, status=status.HTTP_401_UNAUTHORIZED)
             
-            user, created = user_model.objects.get_or_create(mobileno=phone_number,role='supplier',is_supplier=True,is_mobileverified=True)
+            user, _created = user_model.objects.get_or_create(mobileno=phone_number)
+            if _created:
+                user.role='supplier'
+                user.is_supplier=True
+                user.is_mobileverified=True
+                user.save()
+
             token, created = Token.objects.get_or_create(user=user)
             
             if web == False:
@@ -152,7 +162,12 @@ class OTPManager:
             if int(otp) != device_otp.otp:
                 return JsonResponse({'Error': "OTP Didn't matched!"}, status=status.HTTP_401_UNAUTHORIZED)
             
-            user, created = user_model.objects.get_or_create(mobileno=phone_number,role='bde',is_supplier=True,is_mobileverified=True)
+            user,_created = user_model.objects.get_or_create(mobileno=phone_number)
+            if _created:
+                user.role='bde'
+                user.is_supplier=True
+                user.is_mobileverified=True
+                user.save()
             token, created = Token.objects.get_or_create(user=user)
             
             if web == False:
