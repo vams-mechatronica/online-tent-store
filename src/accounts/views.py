@@ -33,6 +33,8 @@ from django.contrib.auth.views import (
 import requests
 
 User = get_user_model()
+import logging
+logger = logging.getLogger(__name__)
 
 
 # Create your views here.
@@ -268,16 +270,18 @@ class getOTP(APIView):
                     if timediff.total_seconds() < 15:
                         return JsonResponse({"Status": "Sent"})
             except Exception as e:
-                pass
+                logger.exception(f'Error Occurred: {str(e)}')
 
-            if OTPManager.send_otp(
-                fake_otp,
-                int(request.data.get("otp")) if fake_otp else randint(1000, 9999),
-                country_code,
-                phone_number,
-            ):
+            sent,count = OTPManager.send_otp(
+                            fake_otp,
+                            int(request.data.get("otp")) if fake_otp else randint(1000, 9999),
+                            country_code,
+                            phone_number,
+                        )
+            if sent:
                 return Response({"Status": "Sent"}, status=status.HTTP_200_OK)
-            return JsonResponse({"Error": "You have exceeded your attempts."})
+            else:
+                return Response({"Error": f"You have exceeded your attempts. Total OTPs sent today: {str(count)}"},status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response(
                 {"Error": "Invalid Data","message":f"{e}"}, status=status.HTTP_400_BAD_REQUEST

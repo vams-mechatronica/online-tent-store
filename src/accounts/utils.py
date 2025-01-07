@@ -30,8 +30,8 @@ class OTPManager:
         count = DeviceOtp.objects.filter(
             number=phone_number, created_date__date=date.today()).count()
         
-        if count > 5:
-            return False
+        if count > 50:
+            return False, count
         
         try:
             device_otps = DeviceOtp.objects.filter(
@@ -85,7 +85,7 @@ class OTPManager:
                 logger.info('Message Sent Successfully')
         DeviceOtp.objects.create(
             number=phone_number, otp=otp, status=True, country=country)
-        return True
+        return True, count
 
     @staticmethod
     def verify_otp(otp, country_code, phone_number,web):
