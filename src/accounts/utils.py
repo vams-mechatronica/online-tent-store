@@ -92,8 +92,11 @@ class OTPManager:
         try:
             country_code = country_code.replace('+', '')
             country = Country.objects.get(country_code=country_code)
-            device_otp = DeviceOtp.objects.get(
-                number=phone_number, status=True, country=country)
+            try:
+                device_otp = DeviceOtp.objects.get(
+                    number=phone_number, status=True, country=country)
+            except DeviceOtp.DoesNotExist:
+                return Response({'Error':"OTP Didn't matched!"},status=status.HTTP_401_UNAUTHORIZED)
             if int(otp) != device_otp.otp:
                 return JsonResponse({'Error': "OTP Didn't matched!"}, status=status.HTTP_401_UNAUTHORIZED)
             user, created = user_model.objects.get_or_create(mobileno=phone_number,is_mobileverified=True)
@@ -114,8 +117,11 @@ class OTPManager:
         try:
             country_code = country_code.replace('+', '')
             country = Country.objects.get(country_code=country_code)
-            device_otp = DeviceOtp.objects.get(
-                number=phone_number, status=True, country=country)
+            try:
+                device_otp = DeviceOtp.objects.get(
+                    number=phone_number, status=True, country=country)
+            except DeviceOtp.DoesNotExist:
+                return Response({'Error':"OTP Didn't matched!"},status=status.HTTP_401_UNAUTHORIZED)
             if int(otp) != device_otp.otp:
                 return JsonResponse({'Error': "OTP Didn't matched!"}, status=status.HTTP_401_UNAUTHORIZED)
             
@@ -138,8 +144,11 @@ class OTPManager:
         try:
             country_code = country_code.replace('+', '')
             country = Country.objects.get(country_code=country_code)
-            device_otp = DeviceOtp.objects.get(
-                number=phone_number, status=True, country=country)
+            try:
+                device_otp = DeviceOtp.objects.get(
+                    number=phone_number, status=True, country=country)
+            except DeviceOtp.DoesNotExist:
+                return Response({'Error':"OTP Didn't matched!"},status=status.HTTP_401_UNAUTHORIZED)
             if int(otp) != device_otp.otp:
                 return JsonResponse({'Error': "OTP Didn't matched!"}, status=status.HTTP_401_UNAUTHORIZED)
             
