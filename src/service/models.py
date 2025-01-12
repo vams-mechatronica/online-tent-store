@@ -10,8 +10,8 @@ class ServicableAddress(models.Model):
     pincode = models.IntegerField(_("Pincode"),default=123456)
     
     class Meta:
-        verbose_name = _("ServicableAddress")
-        verbose_name_plural = _("ServicableAddresss")
+        verbose_name = _("Servicable Address")
+        verbose_name_plural = _("Servicable Addresss")
 
     def __str__(self):
         return "{}, {}, {} - {}".format(self.area,self.city,self.state,self.pincode)

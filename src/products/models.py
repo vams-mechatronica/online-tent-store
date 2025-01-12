@@ -63,8 +63,8 @@ class GatheringSize(models.Model):
     modified_at = models.DateTimeField(_("Modified At"), auto_now=True, auto_now_add=False)
     
     class Meta:
-        verbose_name = _("GatheringSize")
-        verbose_name_plural = _("GatheringSizes")
+        verbose_name = _("Gathering Size")
+        verbose_name_plural = _("Gathering Sizes")
 
     def __str__(self):
         return self.name
@@ -114,8 +114,8 @@ class UserRequirement(models.Model):
     modified_at = models.DateTimeField(_("Modified At"), auto_now=True, auto_now_add=False)
 
     class Meta:
-        verbose_name = _("UserRequirement")
-        verbose_name_plural = _("UserRequirements")
+        verbose_name = _("User Requirement")
+        verbose_name_plural = _("User Requirements")
 
     def __str__(self):
         return self.user

@@ -11,7 +11,13 @@ admin.site.register(CustomUser,CustomUserAdmin)
 
 admin.site.register(UserAddresses)
 
-admin.site.register(DeviceOtp)
+@admin.register(DeviceOtp)
+class DeviceOtpAdmin(admin.ModelAdmin):
+    list_display = ('number','otp','status','created_date')
+    search_fields = ('number',)
+    ordering = ('number','otp','created_date')
+    
+
 
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):

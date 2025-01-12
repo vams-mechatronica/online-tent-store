@@ -14,8 +14,8 @@ class ServiceProvider(models.Model):
     serviceable_address = models.ManyToManyField("service.ServicableAddress", verbose_name=_("Serviceable Pincode/Address"))
     
     class Meta:
-        verbose_name = _("ServiceProvider")
-        verbose_name_plural = _("ServiceProviders")
+        verbose_name = _("Supplier/Vendor")
+        verbose_name_plural = _("Suppliers/Vendors")
 
     def __str__(self):
         return self.name
