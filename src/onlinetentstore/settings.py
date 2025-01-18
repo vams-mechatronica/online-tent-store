@@ -52,9 +52,34 @@ INSTALLED_APPS = [
     'payments',
     'marketing',
     'service',
+    'django_filters',
+    'corsheaders',
+]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:4200",
+    "http://localhost:8000",
 ]
 
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_HEADERS = [
+    'content-type',
+    'authorization',
+    'x-csrftoken',
+    ...
+]
+
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    ...
+]
+
+
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -62,7 +87,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # "allauth.account.middleware.AccountMiddleware",
+    # 'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'onlinetentstore.urls'
@@ -89,13 +114,6 @@ WSGI_APPLICATION = 'onlinetentstore.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 
 DATABASES = {
         'default': {
@@ -180,3 +198,20 @@ RAZORPAY_API_KEY_SECRET = "aP7pgMCFa11yKw19p8G8h63B"
 
 INFOBIP_API_KEY = "1df6da9de0f3146a6974d2341f9009e3-6c2d2d67-30ea-4449-bfb2-fd7cab2efb4f"
 INFOBIP_SEND_TEMPLATE_MESSAGE_API_URL = "https://2vmy9l.api.infobip.com/whatsapp/1/message/template"
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
+
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Online APIs',
+    'DESCRIPTION': 'API service for multiple applications',
+    'VERSION': '1.0.0',
+    'TERMS_OF_SERVICE': 'https://www.vamsbookstore.in/terms-of-service/',
+    'CONTACT': {
+        'name': 'Support Team',
+        'email': 'support@vamsbookstore.in',
+    },
+}

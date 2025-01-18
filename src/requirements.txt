@@ -18,4 +18,5 @@ sqlparse==0.4.3            # Required by Django ORM
 uritemplate==4.1.1         # Dependency for DRF/YASG
 urllib3==1.26.12           # Required by requests
 mysqlclient==2.1.1         # MySQL database adapter for Django 4.1
-
+django-cors-headers
+django-filter
