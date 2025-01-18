@@ -198,3 +198,8 @@ class UserAddressSerializer(serializers.ModelSerializer):
         user = CurrentUserDefault()
         defaults = self.validated_data.copy()
         return UserAddresses.objects.get_or_create(user=user, defaults=defaults)
+
+class CountrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Country
+        fields = '__all__'

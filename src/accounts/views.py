@@ -362,6 +362,11 @@ class CustomerRetrieveUpdateView(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+class CountryAPI(generics.ListAPIView):
+    permission_classes = (AllowAny,)
+    queryset = Country.objects.all()
+    serializer_class = CountrySerializer
+
 
 def profileDashboard(request):
     title, desc, key, canonical = get_meta_data(request.path, request.get_host())
