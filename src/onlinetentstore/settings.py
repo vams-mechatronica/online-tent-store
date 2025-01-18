@@ -64,8 +64,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_HEADERS = [
     'content-type',
     'authorization',
-    'x-csrftoken',
-    ...
+    'x-csrftoken'
 ]
 
 CORS_ALLOW_METHODS = [
@@ -73,8 +72,7 @@ CORS_ALLOW_METHODS = [
     'POST',
     'PUT',
     'PATCH',
-    'DELETE',
-    ...
+    'DELETE'
 ]
 
 
