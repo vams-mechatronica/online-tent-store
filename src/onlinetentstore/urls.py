@@ -8,15 +8,28 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 ...
-from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Online APIs",
+      default_version='v1',
+      description="API service for multiple applications",
+      terms_of_service="https://www.vamsbookstore.in/terms-of-service/",
+   ),
+   public=True,
+   permission_classes=(permissions.AllowAny,),
+)
+
+
+admin.site.site_header = "Admin"
+admin.site.index_title = "Admin"
+admin.site.site_title = "Admin"
+
+register_converter(HashIdConverter, "hashid")
+register_converter(FloatConverter, "float")
 
 urlpatterns = [
-    # Schema endpoints
-    # path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-    # path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-    # path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
-
-    # Other endpoints
+    path('', schema_view.with_ui('swagger', cache_timeout=0)),
     path('admin/', admin.site.urls),
     path('api/v1/account/', include('accounts.urls')),
     path('api/v1/product/', include('products.urls')),
