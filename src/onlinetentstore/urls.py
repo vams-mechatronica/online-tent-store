@@ -30,6 +30,7 @@ register_converter(FloatConverter, "float")
 
 urlpatterns = [
     path('', schema_view.with_ui('swagger', cache_timeout=0)),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0)),
     path('admin/', admin.site.urls),
     path('api/v1/account/', include('accounts.urls')),
     path('api/v1/product/', include('products.urls')),
