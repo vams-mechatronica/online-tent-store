@@ -6,15 +6,23 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = '__all__'
 
+class ProductImageSerializer(serializers.ModelSerializer):
+    image_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ProductImage
+        fields = ['image_url']  # Just return image URL
+
+    def get_image_url(self, obj):
+        # Return the absolute URL of the image
+        return obj.image.url
 class ProductSerialzer(serializers.ModelSerializer):
+    images = ProductImageSerializer(many=True, read_only=True)  
+
     class Meta:
         model = Product
         fields = '__all__'
 
-class ProductImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProductImage
-        fields = '__all__'
 
 class ProductCategorySerializer(serializers.ModelSerializer):
     category = CategorySerializer()

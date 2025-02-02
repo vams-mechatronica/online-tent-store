@@ -3,8 +3,10 @@ from .views import *
 urlpatterns = [
     path('all',ProductAPI.as_view()),
     path('images',ProductImageAPI.as_view()),
-    path('create',ProductPostAPI.as_view()),
-    path('images/create',ProductImagePostAPI.as_view()),
+    path('supplier/create',ProductPostAPI.as_view()),
+    path('supplier/get',ProductGetSupplierAPI.as_view()),
+    path('supplier/images/create',ProductImagePostAPI.as_view()),
+    path('supplier/images/get',ProductImagePostAPI.as_view()),
     path('category',CategoryAPI.as_view()),
     path('product-category',ProductCategoryAPI.as_view()),
     path('product-images/<int:pk>',ProductImagesAPIView.as_view()),

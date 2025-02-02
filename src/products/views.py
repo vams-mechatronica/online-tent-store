@@ -23,6 +23,26 @@ class ProductPostAPI(generics.CreateAPIView):
     authentication_classes = (BasicAuthentication,TokenAuthentication)
     permission_classes = (IsAuthenticated,)
 
+
+class ProductGetSupplierAPI(generics.ListAPIView):
+    serializer_class = ProductSerialzer
+    pagination_class = PageNumberPagination
+    authentication_classes = (BasicAuthentication,TokenAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        # Check if the user is a supplier
+        if not self.request.user.is_supplier:
+            raise NotFound("User is not a supplier")
+        
+        # Assuming Product model has a ForeignKey `supplier` pointing to the User model or Supplier model
+        supplier = self.request.user  # If the user is a supplier, we use the user itself
+        
+        # Filter products by the related supplier (adjust the field based on your model)
+        queryset = Product.objects.filter(supplier__user=supplier)
+        
+        return queryset
+
 class ProductImageAPI(generics.ListAPIView):
     queryset = ProductImage.objects.all()
     serializer_class = ProductImageSerializer
