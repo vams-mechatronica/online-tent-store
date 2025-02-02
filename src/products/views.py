@@ -2,9 +2,11 @@ from django.shortcuts import render
 from rest_framework.pagination import PageNumberPagination
 from django.conf import settings
 from decimal import Decimal
+from rest_framework.exceptions import NotFound
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework import generics, status, filters
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication, SessionAuthentication
@@ -29,6 +31,8 @@ class ProductGetSupplierAPI(generics.ListAPIView):
     pagination_class = PageNumberPagination
     authentication_classes = (BasicAuthentication,TokenAuthentication)
     permission_classes = (IsAuthenticated,)
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['category']
 
     def get_queryset(self):
         # Check if the user is a supplier
