@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from rest_framework.exceptions import NotFound
+
 from rest_framework.pagination import PageNumberPagination
 from django.conf import settings
 from decimal import Decimal
@@ -64,6 +66,20 @@ class SupplierTransactionRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
 
 class SupplierAccountDetailsCreateAPIView(generics.CreateAPIView):
     queryset = SupplierAccountDetails.objects.all()
+    serializer_class = SupplierAccountDetailsSerializer
+
+class GetSupplierAccountDetails(generics.ListAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    def get_queryset(self):
+        # Check if the user is a supplier
+        if not self.request.user.is_supplier:
+            raise NotFound("User is not a supplier")
+        
+        # Assuming Product model has a ForeignKey `supplier` pointing to the User model or Supplier model
+        supplier = self.request.user 
+        queryset = SupplierAccountDetails.objects.filter(supplier__user=supplier)
+        return queryset
     serializer_class = SupplierAccountDetailsSerializer
 
 class SupplierAccountDetailsRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):

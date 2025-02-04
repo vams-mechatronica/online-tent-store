@@ -12,5 +12,6 @@ urlpatterns = [
 
     # SupplierAccountDetails APIs
     path('accounts/create/', SupplierAccountDetailsCreateAPIView.as_view(), name='account-create'),
+    path('accounts/get/', GetSupplierAccountDetails.as_view(), name='account-get'),
     path('accounts/<int:supplier__id>/', SupplierAccountDetailsRetrieveUpdateAPIView.as_view(), name='account-detail-update'),
 ]
