@@ -19,7 +19,7 @@ pipeline {
         GIT_REPO = "https://github.com/vams-mechatronica/online-tent-store.git"
         COMPOSE_FILE = "deploy/docker-compose.yml"
         IMAGE_NAME = "api-service"
-        PORT_MAPPING = "8001:8001"
+        PORT_MAPPING = "8400:8400"
         CONTAINER_NAME = "api-service"
     }
 
