@@ -6,10 +6,15 @@ FROM python:3.9-slim
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+
 # Install system dependencies
-RUN apt-get update \
-    && apt-get install -y build-essential openssl\
-    && apt-get clean
+RUN apt-get update && apt-get install -y \
+    gcc \
+    default-libmysqlclient-dev \
+    pkg-config \
+    python3-dev \
+    build-essential openssl\
+    && rm -rf /var/lib/apt/lists/*
 
 # Install pip and setuptools
 RUN pip install --upgrade pip setuptools
