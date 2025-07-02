@@ -116,11 +116,11 @@ WSGI_APPLICATION = 'onlinetentstore.wsgi.application'
 DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',  
-            'NAME': 'ashekhar$vams-ots',         
-            'USER': 'ashekhar',          
-            'PASSWORD': '1@V@MSots1#',  
-            'HOST': 'ashekhar.mysql.pythonanywhere-services.com',                   
-            # 'PORT': '3306',                       
+            'NAME': os.getenv('POSTGRES_DB'),         
+            'USER': os.getenv('POSTGRES_USER'),          
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD'),  
+            'HOST': os.getenv('POSTGRES_HOST'),                   
+            'PORT': os.getenv('POSTGRES_PORT'),                       
         }
     }
 

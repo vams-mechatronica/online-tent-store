@@ -1,0 +1,41 @@
+services:
+  web-provider:
+    build:
+      context: ..
+      dockerfile: deploy/image/Dockerfile
+    command: python manage.py runserver 0.0.0.0:8001
+    volumes:
+      - ../src:/app/src
+    ports:
+      - "8001:8001"
+    environment:
+      POSTGRES_PASSWORD: ''
+      POSTGRES_DB: 'vams-ots'
+      POSTGRES_USER: 'root'
+      POSTGRES_HOST: 'host.docker.internal'
+      POSTGRES_PORT: '3306'
+    # depends_on:
+    #   # - db
+    #   - redis
+    restart: always
+
+  # celery:
+  #   build:
+  #     context: ..
+  #     dockerfile: deploy/image/Dockerfile
+  #   command: celery -A opcua_provider_service worker --loglevel=info
+  #   volumes:
+  #     - ../src:/app/opcua/provider
+  #   environment:
+  #     POSTGRES_PASSWORD: 'Shekhar123#'
+  #     POSTGRES_DB: 'opcua'
+  #     POSTGRES_USER: 'postgres'
+  #     POSTGRES_HOST: 'host.docker.internal'
+  #     POSTGRES_PORT: '5433'
+  #   depends_on:
+  #     # - db
+  #     - redis
+  #   restart: always
+
+  # redis:
+  #   image: redis:alpine
