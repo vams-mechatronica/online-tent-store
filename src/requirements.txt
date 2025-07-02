@@ -13,3 +13,5 @@ urllib3           # Required by requests
 mysqlclient         # MySQL database adapter for Django 4.1
 django-cors-headers
 django-filter
+psycopg2-binary
+razorpay

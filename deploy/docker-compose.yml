@@ -1,5 +1,5 @@
 services:
-  web-provider:
+  web-ots:
     build:
       context: ..
       dockerfile: deploy/image/Dockerfile
